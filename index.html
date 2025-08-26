@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtMobile Downloads</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: #121212;
+            color: #f5f5f5;
+            transition: background 0.3s, color 0.3s;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: #1f1f1f;
+            color: #fff;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+        }
+        header h1 {
+            font-size: 1.5rem;
+            margin: 0;
+        }
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #2ea44f;
+        }
+        header button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+        .search-bar {
+            margin: 90px auto 20px;
+            max-width: 600px;
+            display: flex;
+            justify-content: center;
+            padding: 0 15px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #1f1f1f;
+            border-radius: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, background 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            background: #292929;
+        }
+        .card h3 {
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        .card p {
+            font-size: 0.95rem;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 18px;
+            background: #2ea44f;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s, transform 0.3s;
+        }
+        .download-btn i {
+            margin-right: 8px;
+        }
+        .download-btn:hover {
+            background: #22863a;
+            transform: scale(1.05);
+        }
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: #1f1f1f;
+            color: #999;
+            font-size: 0.9rem;
+            margin-top: 30px;
+        }
+        .light-theme {
+            background: #f4f4f4;
+            color: #333;
+        }
+        .light-theme header,
+        .light-theme footer,
+        .light-theme .card {
+            background: #fff;
+            color: #333;
+        }
+        .light-theme .card p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ArtMobile</h1>
+        <nav>
+            <a href="#all">Все</a>
+            <a href="#tools">Утилиты</a>
+            <a href="#games">Игры</a>
+        </nav>
+        <button onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Поиск программ..." onkeyup="filterPrograms()">
+    </div>
+
+    <div class="container" id="program-list">
+        <div class="card" data-name="оптимизация">
+            <h3>Программа 1</h3>
+            <p>Описание программы: полезная утилита для оптимизации.</p>
+            <a href="https://www.mediafire.com/file/yourfilelink1" target="_blank" class="download-btn"><i class="fas fa-download"></i>Скачать</a>
+        </div>
+        <div class="card" data-name="анализ данных">
+            <h3>Программа 2</h3>
+            <p>Описание программы: инструмент для анализа данных.</p>
+            <a href="https://www.mediafire.com/file/yourfilelink2" target="_blank" class="download-btn"><i class="fas fa-download"></i>Скачать</a>
+        </div>
+        <div class="card" data-name="pdf редактор">
+            <h3>Программа 3</h3>
+            <p>Описание программы: программа для работы с PDF.</p>
+            <a href="https://www.mediafire.com/file/yourfilelink3" target="_blank" class="download-btn"><i class="fas fa-download"></i>Скачать</a>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 ArtMobile. Все права защищены.
+    </footer>
+
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+
+        function filterPrograms() {
+            const query = document.getElementById('search').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                if (name.includes(query)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
