@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtMobile | Downloads</title>
+    <meta name="description" content="ArtMobile — ծրագրերի և դրայվերների ներբեռնում։ Photoshop, Office, WinRAR և այլն։">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-color: #0f1113;
+            --card-bg: #1a1d21;
+            --accent-color: #00ff88;
+            --text-main: #e0e6ed;
+            --text-dim: #94a3b8;
+            --header-bg: rgba(26, 29, 33, 0.9);
+        }
+
+        .light-theme {
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --accent-color: #10b981;
+            --text-main: #1e293b;
+            --text-dim: #64748b;
+            --header-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-main);
+            transition: 0.3s;
+        }
+
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .search-section { margin-top: 100px; text-align: center; padding: 20px; }
+        .search-bar input {
+            width: 100%; max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg);
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: var(--card-bg);
+            color: var(--text-dim);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 10px 22px;
+            border-radius: 30px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .tab-btn:hover { color: var(--text-main); border-color: var(--accent-color); }
+        .tab-btn.active {
+            background: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--accent-color); }
+        .card h3 { margin: 0 0 10px; font-size: 1.1rem; }
+        .card p { color: var(--text-dim); font-size: 0.85rem; flex-grow: 1; margin-bottom: 20px; word-break: break-word; }
+
+        .download-btn {
+            background: var(--accent-color);
+            color: #000;
+            text-decoration: none;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .command-btn {
+            background: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        .command-btn:hover { background: rgba(0,255,136,0.1); }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-dim);
+            padding: 60px 20px;
+            font-size: 0.95rem;
+        }
+
+        .theme-btn { background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.2rem; }
+        footer { text-align: center; padding: 40px; color: var(--text-dim); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1 style="margin:0; font-size: 1.4rem; color: var(--accent-color)">ArtMobile</h1>
+    <button class="theme-btn" onclick="toggleTheme()" aria-label="Переключить тему"><i class="fas fa-adjust"></i></button>
+</header>
+
+<div class="search-section">
+    <div class="search-bar">
+        <input type="text" id="search" placeholder="Поиск программ..." aria-label="Поиск программ" onkeyup="filterPrograms()">
+    </div>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="pc" onclick="switchTab('pc')">Համակարգիչ</button>
+        <button class="tab-btn" data-tab="android" onclick="switchTab('android')">Հեռախոսների Ծրագիրներ</button>
+        <button class="tab-btn" data-tab="dev" onclick="switchTab('dev')">Ծրագրավորում</button>
+    </div>
+</div>
+
+<div class="tab-panel active" id="panel-pc">
+<div class="container" id="program-list">
+    <div class="card" data-name="adobe after">
+        <h3>Adobe After Effects 2016</h3>
+        <p>Վիդեոմոնտաժ.</p>
+        <a href="https://www.mediafire.com/file/vcn56xvhm9o35s5/Adobe_After_Effects_CC_2016.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="adobe audition">
+        <h3>Adobe Audition</h3>
+        <p>Ձայնափոփոխիչ.</p>
+        <a href="https://www.mediafire.com/file/dt2m3fza2wofe3e/Adobe_Audition_CS6.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="ashwinrar">
+        <h3>WINRAR</h3>
+        <p>Արխիվատոր.</p>
+        <a href="https://www.mediafire.com/file/q0smp4w6laux96w/Ashe_WinRAR_5.40.zip/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="chrome">
+        <h3>Google Chrome</h3>
+        <p>Բրաուզեր.</p>
+        <a href="https://www.mediafire.com/file/4gt7kif8mr3ho0x/ChromeSetup.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="cinema">
+        <h3>Cinema 4D</h3>
+        <p>Գրաֆիկ րեդակտոր.</p>
+        <a href="https://www.mediafire.com/file/2qquccnxhwipydj/CINEMA_4D_Studio_R19.053.zip/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="corel draw">
+        <h3>Corel Draw</h3>
+        <p>Վեկտորային գրաֆիկա.</p>
+        <a href="https://www.mediafire.com/file/fnqscpq945pm1qg/CorelDRAWx4.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="driver booster">
+        <h3>Driver Booster 9</h3>
+        <p>Դրայվերներ.</p>
+        <a href="https://www.mediafire.com/file/edevqnawc4x09tp/Driver.Booster.Pro.9key_%25281%2529.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="driver pack">
+        <h3>Driver Pack</h3>
+        <p>Դրայվերներ.</p>
+        <a href="https://www.mediafire.com/file/rifgylksocd1ktg/DriverPack_17.10.14-19062_Network.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="driver hidden">
+        <h3>Driver Hidden</h3>
+        <p>Драйвер не найден на жестком диске.</p>
+        <a href="https://www.mediafire.com/file/ijwgf0q8xt1azw1/%25D0%25B4%25D1%2580%25D0%25B0%25D0%25B9%25D0%25B2%25D0%25B5%25D1%2580_%25D0%25BD%25D0%25B5_%25D0%25BD%25D0%25B0%25D0%25B9%25D0%25B4%25D0%25B5%25D0%25BD_%25D0%25B6%25D0%25BE%25D1%2581%25D1%2582%25D0%25BA%25D0%25B8%25D0%25B9_%25D0%25B4%25D0%25B8%25D1%2581%25D0%25BA.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="kdwin">
+        <h3>KDwin</h3>
+        <p>Հայերեն ստեղնաշար.</p>
+        <a href="https://www.mediafire.com/file/uz2ie85qjf7b1wf/KDWin2014.zip/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="malware">
+        <h3>Malwarebytes</h3>
+        <p>Անտիվիրուս.</p>
+        <a href="https://www.mediafire.com/file/yev3snu3xu0hkyq/Malwarebytes_Premium_4.1.2.73_64_bit.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="microsoft office">
+        <h3>Microsoft Office 2003</h3>
+        <p>Գրասենյակային փաթեթ.</p>
+        <a href="https://www.mediafire.com/file/vqby7z064cbrf0u/Microsoft_Office_2003.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="odin">
+        <h3>Odin</h3>
+        <p>Samsung firmware tool.</p>
+        <a href="https://www.mediafire.com/file/lozd0vkea1kj147/odin.zip/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="paint tool sai">
+        <h3>Paint Tool SAI</h3>
+        <p>Գրաֆիկական ծրագիր.</p>
+        <a href="https://www.mediafire.com/file/5w1h6c58s7imqpr/PaintToolSai.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="photoshop cs6">
+        <h3>Photoshop CS6</h3>
+        <p>Պատկերների խմբագրիչ.</p>
+        <a href="https://www.mediafire.com/file/nluk64sbgqxq1ps/Photoshop_CS6.rar/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="torrent">
+        <h3>uTorrent Pro</h3>
+        <p>Ֆայլերի ներբեռնում.</p>
+        <a href="https://www.mediafire.com/file/pqj6h4v2mxe5m1h/utorrent.Pro.v3.6.7z/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="windows photo viewer">
+        <h3>Windows Photo Viewer</h3>
+        <p>Նկարների դիտում.</p>
+        <a href="https://www.mediafire.com/file/fgaa88njlyh35vl/Windows_10_Photo_Viewer.zip/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="winsetupfromusb">
+        <h3>WinSetupFromUSB</h3>
+        <p>USB տեղադրման գործիք.</p>
+        <a href="https://www.mediafire.com/file/bqq4vj449k2jbo3/WinSetupFromUSB-1-10.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="photoshop cs3">
+        <h3>Photoshop CS3</h3>
+        <p>Լուսանկարների խմբագրում.</p>
+        <a href="https://www.mediafire.com/file/mn9211og4u4lm58/Photoshop.exe/file" class="download-btn">Ներբեռնել</a>
+    </div>
+    <div class="card" data-name="activation windows office">
+        <h3>Activation Windows 10/11</h3>
+        <p>irm https://get.activated.win | iex</p>
+        <span class="download-btn command-btn">Скопировать команду</span>
+    </div>
+    <div class="card" data-name="windows update disable">
+        <h3>Windows Отключение обновлений</h3>
+        <p>services.msc</p>
+        <span class="download-btn command-btn">Скопировать команду</span>
+    </div>
+    <div class="card" data-name="windows defender disable">
+        <h3>Windows Defender Отключение (Защитник)</h3>
+        <p>Բացում եք Script_run Ֆայլը և սեղմում Y</p>
+        <a href="https://www.mediafire.com/folder/f83w62644vgcd/windows-defender-remover-main" class="download-btn">Ներբեռնել</a>
+    </div>
+</div>
+</div>
+
+<div class="tab-panel" id="panel-android">
+<div class="container" id="program-list-android">
+    <!-- YouTube Premium APK -->
+    <div class="card" data-name="youtube premium">
+        <h3>YouTube Premium</h3>
+        <p>Առանց գովազդի YouTube, ֆոնային նվագարկում.</p>
+        <a href="https://www.mediafire.com/file/kh2z8iqapxtwe54/YouTube_Morphe-v21.04.223-patches-v1.39.1.apk/file" class="download-btn">Ներբեռնել</a>
+    </div>
+</div>
+</div>
+
+<div class="tab-panel" id="panel-dev">
+<div class="container" id="program-list-dev">
+    <!-- Ավելացրու քարտեր այստեղ նույն կառուցվածքով, օրինակ.
+    <div class="card" data-name="app name">
+        <h3>Անուն</h3>
+        <p>Նկարագրություն.</p>
+        <a href="ССЫЛКА" class="download-btn">Ներբեռնել</a>
+    </div>
+    -->
+</div>
+<p class="empty-state" id="dev-empty">Այստեղ շուտով կավելացվեն ծրագրավորման ծրագրեր</p>
+</div>
+
+<footer>
+    © 2026 ArtMobile. Все права защищены.
+</footer>
+
+<script>
+    const themeIcon = document.querySelector('.theme-btn i');
+
+    function applyTheme(isLight) {
+        document.body.classList.toggle('light-theme', isLight);
+    }
+
+    function toggleTheme() {
+        const isLight = !document.body.classList.contains('light-theme');
+        applyTheme(isLight);
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    applyTheme(localStorage.getItem('theme') === 'light');
+
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.tab === tab);
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+            panel.classList.toggle('active', panel.id === 'panel-' + tab);
+        });
+        document.getElementById('search').value = '';
+        filterPrograms();
+    }
+
+    function filterPrograms() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const activePanel = document.querySelector('.tab-panel.active');
+        activePanel.querySelectorAll('.card').forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(query) ? 'flex' : 'none';
+        });
+    }
+
+    function copyText(text) {
+        // Пробуем современный способ (работает только на https/localhost)
+        if (navigator.clipboard && window.isSecureContext) {
+            return navigator.clipboard.writeText(text);
+        }
+        // Запасной способ для http и локальных файлов
+        return new Promise((resolve, reject) => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                const success = document.execCommand('copy');
+                document.body.removeChild(textarea);
+                success ? resolve() : reject(new Error('execCommand failed'));
+            } catch (err) {
+                document.body.removeChild(textarea);
+                reject(err);
+            }
+        });
+    }
+
+    document.querySelectorAll('.command-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const command = btn.previousElementSibling.textContent.trim();
+            const original = btn.textContent;
+            copyText(command).then(() => {
+                btn.textContent = 'Скопировано!';
+                setTimeout(() => { btn.textContent = original; }, 1500);
+            }).catch(() => {
+                btn.textContent = 'Не удалось скопировать';
+                setTimeout(() => { btn.textContent = original; }, 2000);
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
